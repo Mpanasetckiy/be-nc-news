@@ -5,7 +5,10 @@ const { getEndpoints } = require("../controllers/api.controller");
 
 const { getTopics } = require("../controllers/topics.controllers");
 
-const { getArticleById } = require("../controllers/articles.controllers");
+const {
+  getArticleById,
+  getArticles,
+} = require("../controllers/articles.controllers");
 
 router.get("/", getEndpoints);
 
@@ -14,5 +17,7 @@ router.get("/topics", getTopics);
 
 // ARTICLES
 router.get("/articles/:article_id", getArticleById);
+
+router.get("/articles", getArticles);
 
 module.exports = router;
