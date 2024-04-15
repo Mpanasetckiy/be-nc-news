@@ -5,6 +5,7 @@ const seed = require("../db/seeds/seed.js");
 const db = require("../db/connection.js");
 
 const testData = require("../db/data/test-data");
+const endpointsFile = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(testData);
@@ -21,11 +22,7 @@ describe("app routes", () => {
         .get("/api")
         .expect(200)
         .then(({ body: { endpoints } }) => {
-          for (const key in endpoints) {
-            expect(endpoints[key]).toHaveProperty("description");
-            expect(endpoints[key]).toHaveProperty("queries");
-            expect(endpoints[key]).toHaveProperty("exampleResponse");
-          }
+          expect(endpoints).toEqual(endpointsFile);
         });
     });
   });
@@ -41,6 +38,39 @@ describe("app routes", () => {
             expect(topic).toHaveProperty("description");
           });
         });
+    });
+  });
+  describe("ARTICLES routes", () => {
+    test("200 - GET /api/articles/1", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article).toMatchObject({
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 100,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          });
+        });
+    });
+
+    test("400 - GET /api/articles/my_article", () => {
+      return request(app)
+        .get("/api/articles/my_article")
+        .expect(400)
+        .then({ body: "Bad request" });
+    });
+
+    test("404 - GET /api/articles/777", () => {
+      return request(app)
+        .get("/api/articles/777")
+        .expect(404)
+        .then({ body: "No data found" });
     });
   });
 });
