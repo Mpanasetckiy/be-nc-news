@@ -12,6 +12,6 @@ You will need to create two `.env` files for your project: `.env.test` and `.env
 
 You'll need to run npm install at this point.
 
-```bash
+```
 npm install
 ```
