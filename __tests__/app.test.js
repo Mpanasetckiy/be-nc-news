@@ -15,6 +15,20 @@ afterAll(() => {
 });
 
 describe("app routes", () => {
+  describe("Endpoints description", () => {
+    test("200 - GET /api", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body: { endpoints } }) => {
+          for (const key in endpoints) {
+            expect(endpoints[key]).toHaveProperty("description");
+            expect(endpoints[key]).toHaveProperty("queries");
+            expect(endpoints[key]).toHaveProperty("exampleResponse");
+          }
+        });
+    });
+  });
   describe("TOPICS routes ", () => {
     test("200 - GET /api/topics", () => {
       return request(app)
