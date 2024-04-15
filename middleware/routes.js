@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
+const { getEndpoints } = require("../controllers/api.controller");
+
 const { getTopics } = require("../controllers/topics.controllers");
+
+router.get("/", getEndpoints);
 
 router.get("/topics", getTopics);
 
