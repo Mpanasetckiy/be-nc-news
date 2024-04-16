@@ -107,6 +107,36 @@ describe("App endpoints", () => {
             expect(message).toBe("Bad query value!");
           });
       });
+
+      test("200 - GET: Responds with an array of 12 articles filtered by topic", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toHaveLength(12);
+            articles.forEach(({ topic }) => {
+              expect(topic).toBe("mitch");
+            });
+          });
+      });
+
+      test("200 - GET: Responds with an array of all 13 articles when topic query omitted", () => {
+        return request(app)
+          .get("/api/articles?topic=")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toHaveLength(13);
+          });
+      });
+
+      test("200 - GET: Responds with an empty array when no corresponding articles found", () => {
+        return request(app)
+          .get("/api/articles?topic=blahblahtopic")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toHaveLength(0);
+          });
+      });
     });
 
     describe("getCommentsByArticleId", () => {
