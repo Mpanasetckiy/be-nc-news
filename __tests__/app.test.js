@@ -298,4 +298,30 @@ describe("App endpoints", () => {
       });
     });
   });
+
+  describe("COMMENTS endpoints", () => {
+    describe("deleteComment", () => {
+      test("204 - DELETE: Responds with an appropriate status code", () => {
+        return request(app).delete("/api/comments/1").expect(204);
+      });
+
+      test("400 - DELETE: Responds with an appropriate error when invalid comment_id provided", () => {
+        return request(app)
+          .delete("/api/comments/blahcomment")
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("404 - DELETE: Responds with an appropriate error when nonexistent comment_id provided", () => {
+        return request(app)
+          .delete("/api/comments/757")
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+    });
+  });
 });
