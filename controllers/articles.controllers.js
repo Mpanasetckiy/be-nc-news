@@ -1,6 +1,7 @@
 const {
   fetchArticleById,
   fetchArticles,
+  fetchCommentsByArticleId,
 } = require("../models/articles.models");
 
 const getArticleById = async (req, res, next) => {
@@ -25,4 +26,19 @@ const getArticles = async (req, res, next) => {
   }
 };
 
-module.exports = { getArticleById, getArticles };
+const getCommentsByArticleId = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const comments = await fetchCommentsByArticleId(article_id);
+    res.status(200).send({ comments });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getArticleById,
+  getArticles,
+  fetchCommentsByArticleId,
+  getCommentsByArticleId,
+};
