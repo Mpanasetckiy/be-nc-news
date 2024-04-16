@@ -36,4 +36,17 @@ const fetchArticles = async (queries) => {
   return rows;
 };
 
-module.exports = { fetchArticleById, fetchArticles };
+const fetchCommentsByArticleId = async (id) => {
+  const { rows } = await db.query(
+    `SELECT * FROM comments
+  WHERE article_id = $1
+  ORDER BY created_at DESC;`,
+    [id]
+  );
+  if (!rows.length) {
+    return Promise.reject({ status: 404, message: "No data found" });
+  }
+  return rows;
+};
+
+module.exports = { fetchArticleById, fetchArticles, fetchCommentsByArticleId };

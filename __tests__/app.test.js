@@ -15,7 +15,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe("app routes", () => {
+describe("App routes", () => {
   describe("Endpoints description", () => {
     test("200 - GET /api", () => {
       return request(app)
@@ -106,6 +106,43 @@ describe("app routes", () => {
           .then(({ body: { message } }) => {
             expect(message).toBe("Bad query value!");
           });
+      });
+    });
+
+    describe("getCommentsByArticleId", () => {
+      test("200 - GET /api/articles/:article_id/comments", () => {
+        return request(app)
+          .get("/api/articles/5/comments")
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).toHaveLength(2);
+            expect(comments).toBeSorted({
+              key: "created_at",
+              descending: true,
+            });
+            comments.forEach((comment) => {
+              expect(comment).toHaveProperty("comment_id");
+              expect(comment).toHaveProperty("body");
+              expect(comment).toHaveProperty("article_id");
+              expect(comment).toHaveProperty("author");
+              expect(comment).toHaveProperty("votes");
+              expect(comment).toHaveProperty("created_at");
+            });
+          });
+      });
+
+      test("400 - GET /api/articles/my_article/comments", () => {
+        return request(app)
+          .get("/api/articles/my_article/comments")
+          .expect(400)
+          .then({ body: "Bad request" });
+      });
+
+      test("404 - GET /api/articles/999/comments", () => {
+        return request(app)
+          .get("/api/articles/999/comments")
+          .expect(404)
+          .then({ body: "No data found" });
       });
     });
   });
