@@ -48,15 +48,47 @@ const fetchCommentsByArticleId = async (id) => {
   return rows;
 };
 
-const checkArticleExists = async (articleId) => {
+const checkArticleExists = async (id) => {
   const { rows } = await db.query(
     `SELECT * FROM articles
   WHERE article_id = $1`,
-    [articleId]
+    [id]
   );
   if (!rows.length) {
     return Promise.reject({ status: 404, message: "No data found" });
   }
 };
 
-module.exports = { fetchArticleById, fetchArticles, fetchCommentsByArticleId };
+const checkUserExists = async (username) => {
+  const { rows } = await db.query(
+    `SELECT * FROM users
+  WHERE username = $1`,
+    [username]
+  );
+  if (!rows.length) {
+    return Promise.reject({ status: 404, message: "No data found" });
+  }
+};
+
+const createComment = async (id, reqBody) => {
+  const { username, body } = reqBody;
+
+  await checkArticleExists(id);
+  await checkUserExists(username);
+
+  const { rows } = await db.query(
+    `INSERT INTO comments
+ (author, body, article_id)
+ VALUES ($1, $2, $3)
+ RETURNING *;`,
+    [username, body, id]
+  );
+  return rows[0];
+};
+
+module.exports = {
+  fetchArticleById,
+  fetchArticles,
+  fetchCommentsByArticleId,
+  createComment,
+};
