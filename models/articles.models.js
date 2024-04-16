@@ -37,6 +37,8 @@ const fetchArticles = async (queries) => {
 };
 
 const fetchCommentsByArticleId = async (id) => {
+  await checkArticleExists(id);
+
   const { rows } = await db.query(
     `SELECT * FROM comments
   WHERE article_id = $1
@@ -44,9 +46,20 @@ const fetchCommentsByArticleId = async (id) => {
     [id]
   );
   if (!rows.length) {
-    return Promise.reject({ status: 404, message: "No data found" });
+    return Promise.reject({ status: 200, message: "No comments found" });
   }
   return rows;
+};
+
+const checkArticleExists = async (articleId) => {
+  const { rows } = await db.query(
+    `SELECT * FROM articles
+  WHERE article_id = $1`,
+    [articleId]
+  );
+  if (!rows.length) {
+    return Promise.reject({ status: 404, message: "No data found" });
+  }
 };
 
 module.exports = { fetchArticleById, fetchArticles, fetchCommentsByArticleId };

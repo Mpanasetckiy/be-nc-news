@@ -135,14 +135,27 @@ describe("App routes", () => {
         return request(app)
           .get("/api/articles/my_article/comments")
           .expect(400)
-          .then({ body: "Bad request" });
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
       });
 
       test("404 - GET /api/articles/999/comments", () => {
         return request(app)
           .get("/api/articles/999/comments")
           .expect(404)
-          .then({ body: "No data found" });
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+
+      test("200 - GET /api/articles/2/comments", () => {
+        return request(app)
+          .get("/api/articles/2/comments")
+          .expect(200)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No comments found");
+          });
       });
     });
   });
