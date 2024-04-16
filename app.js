@@ -3,9 +3,14 @@ const app = express();
 
 const routes = require("./middleware/routes");
 
-const { errorHandling } = require("./middleware/error-handling");
+const {
+  errorHandling,
+  pgErrorHandling,
+} = require("./middleware/error-handling");
 
 app.use("/api", routes);
+
+app.use(pgErrorHandling);
 
 app.use(errorHandling);
 
