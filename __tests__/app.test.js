@@ -235,6 +235,33 @@ describe("App endpoints", () => {
           });
       });
 
+      test("400 - POST: Responds with appropriate error when missing fields on body provided", () => {
+        const comment = {
+          username: "lurker",
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(comment)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("400 - POST: Responds with appropriate error when the provided body is not a string", () => {
+        const comment = {
+          username: "lurker",
+          body: 1234,
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(comment)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
       test("404 - POST: Responds with appropriate error when nonexistent article_id provided", () => {
         const comment = {
           username: "malina",
@@ -245,7 +272,7 @@ describe("App endpoints", () => {
           .send(comment)
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("No data found");
+            expect(message).toBe("No key found");
           });
       });
 
@@ -259,7 +286,7 @@ describe("App endpoints", () => {
           .send(comment)
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("No data found");
+            expect(message).toBe("No key found");
           });
       });
     });
