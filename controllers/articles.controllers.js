@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchCommentsByArticleId,
   createComment,
+  updateArticle,
 } = require("../models/articles.models");
 
 const getArticleById = async (req, res, next) => {
@@ -48,10 +49,22 @@ const addComment = async (req, res, next) => {
   }
 };
 
+const patchArticle = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const { inc_vote } = req.body;
+    const article = await updateArticle(article_id, inc_vote);
+    res.status(200).send({ article });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getArticleById,
   getArticles,
   fetchCommentsByArticleId,
   getCommentsByArticleId,
   addComment,
+  patchArticle,
 };

@@ -86,9 +86,24 @@ const createComment = async (id, reqBody) => {
   return rows[0];
 };
 
+const updateArticle = async (articleId, inc_vote) => {
+  await checkArticleExists(articleId);
+
+  const { rows } = await db.query(
+    `UPDATE articles
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *;`,
+    [inc_vote, articleId]
+  );
+
+  return rows[0];
+};
+
 module.exports = {
   fetchArticleById,
   fetchArticles,
   fetchCommentsByArticleId,
   createComment,
+  updateArticle,
 };

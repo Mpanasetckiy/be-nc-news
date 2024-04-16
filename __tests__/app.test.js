@@ -191,7 +191,7 @@ describe("App endpoints", () => {
           });
       });
 
-      test("400 - POST: Responds with appropriate error when non-valid article_id provided", () => {
+      test("400 - POST: Responds with appropriate error when invalid article_id provided", () => {
         const comment = {
           username: "lurker",
           body: "This is a test comment.",
@@ -227,6 +227,70 @@ describe("App endpoints", () => {
         return request(app)
           .post("/api/articles/2/comments")
           .send(comment)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+    });
+
+    describe("patchArticle", () => {
+      test("200 - PATCH: Responds with an updated article with corresponding id", () => {
+        const body = {
+          inc_vote: 5,
+        };
+        return request(app)
+          .patch("/api/articles/3")
+          .send(body)
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article).toMatchObject({
+              article_id: 3,
+              title: "Eight pug gifs that remind me of mitch",
+              topic: "mitch",
+              author: "icellusedkars",
+              body: "some gifs",
+              created_at: expect.any(String),
+              votes: 5,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            });
+          });
+      });
+
+      test("400 - PATCH: Responds with an appropriate error when invalid article_id provided", () => {
+        const body = {
+          inc_vote: 5,
+        };
+        return request(app)
+          .patch("/api/articles/blahblah")
+          .send(body)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("400 - PATCH: Responds with an appropriate error when invalid inc_vote provided", () => {
+        const body = {
+          inc_vote: "sdfsdf",
+        };
+        return request(app)
+          .patch("/api/articles/3")
+          .send(body)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("404 - PATCH: Responds with an appropriate error when nonexistent article_id provided", () => {
+        const body = {
+          inc_vote: 5,
+        };
+        return request(app)
+          .patch("/api/articles/555")
+          .send(body)
           .expect(404)
           .then(({ body: { message } }) => {
             expect(message).toBe("No data found");
