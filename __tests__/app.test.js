@@ -15,9 +15,9 @@ afterAll(() => {
   return db.end();
 });
 
-describe("App routes", () => {
+describe("App endpoints", () => {
   describe("Endpoints description", () => {
-    test("200 - GET /api", () => {
+    test("200 - GET: Responds with a JSON object describing current functionality", () => {
       return request(app)
         .get("/api")
         .expect(200)
@@ -26,8 +26,8 @@ describe("App routes", () => {
         });
     });
   });
-  describe("TOPICS routes ", () => {
-    test("200 - GET /api/topics", () => {
+  describe("TOPICS endpoints", () => {
+    test("200 - GET: Responds with an array of 3 topics", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
@@ -40,9 +40,9 @@ describe("App routes", () => {
         });
     });
   });
-  describe("ARTICLES routes", () => {
+  describe("ARTICLES endpoints", () => {
     describe("getArticleById", () => {
-      test("200 - GET /api/articles/1", () => {
+      test("200 - GET: Responds with a article with according id", () => {
         return request(app)
           .get("/api/articles/1")
           .expect(200)
@@ -60,14 +60,14 @@ describe("App routes", () => {
           });
       });
 
-      test("400 - GET /api/articles/my_article", () => {
+      test("400 - GET: Responds with appropriate error code and body message", () => {
         return request(app)
           .get("/api/articles/my_article")
           .expect(400)
           .then({ body: "Bad request" });
       });
 
-      test("404 - GET /api/articles/777", () => {
+      test("404 - GET: Responds with appropriate error code and body message", () => {
         return request(app)
           .get("/api/articles/777")
           .expect(404)
@@ -76,7 +76,7 @@ describe("App routes", () => {
     });
 
     describe("getArticles", () => {
-      test("200 - GET /api/articles", () => {
+      test("200 - GET: Responds with an array of 13 articles sorted and ordered", () => {
         return request(app)
           .get("/api/articles")
           .expect(200)
@@ -99,9 +99,9 @@ describe("App routes", () => {
           });
       });
 
-      test("400 - GET /api/articles", () => {
+      test("400 - GET: Responds with appropriate error code and body message", () => {
         return request(app)
-          .get("/api/articles?sort_by=blahblah&order=asc")
+          .get("/api/articles?sort_by=blahblah")
           .expect(400)
           .then(({ body: { message } }) => {
             expect(message).toBe("Bad query value!");
@@ -110,7 +110,7 @@ describe("App routes", () => {
     });
 
     describe("getCommentsByArticleId", () => {
-      test("200 - GET /api/articles/:article_id/comments", () => {
+      test("200 - GET: Responds with an array of 2 comments sorted and ordered", () => {
         return request(app)
           .get("/api/articles/5/comments")
           .expect(200)
@@ -131,7 +131,7 @@ describe("App routes", () => {
           });
       });
 
-      test("400 - GET /api/articles/my_article/comments", () => {
+      test("400 - GET: Responds with appropriate error code and body message", () => {
         return request(app)
           .get("/api/articles/my_article/comments")
           .expect(400)
@@ -140,7 +140,7 @@ describe("App routes", () => {
           });
       });
 
-      test("404 - GET /api/articles/999/comments", () => {
+      test("404 - GET: Responds with appropriate error code and body message", () => {
         return request(app)
           .get("/api/articles/999/comments")
           .expect(404)
@@ -149,7 +149,7 @@ describe("App routes", () => {
           });
       });
 
-      test("200 - GET /api/articles/2/comments", () => {
+      test("200 - GET: Responds with appropriate status code and body message", () => {
         return request(app)
           .get("/api/articles/2/comments")
           .expect(200)
