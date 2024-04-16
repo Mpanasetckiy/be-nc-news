@@ -93,5 +93,18 @@
     "description": "deletes the corresponding comment",
     "queries": [],
     "exampleResponse": {}
+  },
+  "GET /api/users": {
+    "description": "serves with an array of users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "rogershop",
+          "name": "paul",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+        }
+      ]
+    }
   }
 }
