@@ -2,6 +2,7 @@ const {
   fetchArticleById,
   fetchArticles,
   fetchCommentsByArticleId,
+  createComment,
 } = require("../models/articles.models");
 
 const getArticleById = async (req, res, next) => {
@@ -36,9 +37,21 @@ const getCommentsByArticleId = async (req, res, next) => {
   }
 };
 
+const addComment = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    const body = req.body;
+    const newComment = await createComment(article_id, body);
+    res.status(201).send({ newComment });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getArticleById,
   getArticles,
   fetchCommentsByArticleId,
   getCommentsByArticleId,
+  addComment,
 };

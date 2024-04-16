@@ -8,6 +8,8 @@ const {
   pgErrorHandling,
 } = require("./middleware/error-handling");
 
+app.use(express.json());
+
 app.use("/api", routes);
 
 app.use(pgErrorHandling);

@@ -168,5 +168,70 @@ describe("App endpoints", () => {
           });
       });
     });
+
+    describe("addComment", () => {
+      test("201 - POST: Responds with a newly created comment object", () => {
+        const comment = {
+          username: "lurker",
+          body: "This is a test comment.",
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(comment)
+          .expect(201)
+          .then(({ body: { newComment } }) => {
+            expect(newComment).toMatchObject({
+              comment_id: 19,
+              body: "This is a test comment.",
+              votes: 0,
+              author: "lurker",
+              article_id: 2,
+              created_at: expect.any(String),
+            });
+          });
+      });
+
+      test("400 - POST: Responds with appropriate error when non-valid article_id provided", () => {
+        const comment = {
+          username: "lurker",
+          body: "This is a test comment.",
+        };
+        return request(app)
+          .post("/api/articles/my_article/comments")
+          .send(comment)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("404 - POST: Responds with appropriate error when nonexistent article_id provided", () => {
+        const comment = {
+          username: "malina",
+          body: "This is a test comment.",
+        };
+        return request(app)
+          .post("/api/articles/999/comments")
+          .send(comment)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+
+      test("404 - POST: Responds with appropriate error when nonexistent username passed", () => {
+        const comment = {
+          username: "malina",
+          body: "This is a test comment.",
+        };
+        return request(app)
+          .post("/api/articles/2/comments")
+          .send(comment)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+    });
   });
 });
