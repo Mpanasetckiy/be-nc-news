@@ -110,6 +110,23 @@ describe("App endpoints", () => {
     });
 
     describe("getCommentsByArticleId", () => {
+      test("200 - GET: Responds with an array of 2 comments", () => {
+        return request(app)
+          .get("/api/articles/5/comments")
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).toHaveLength(2);
+            comments.forEach((comment) => {
+              expect(comment).toHaveProperty("comment_id");
+              expect(comment).toHaveProperty("body");
+              expect(comment).toHaveProperty("article_id");
+              expect(comment).toHaveProperty("author");
+              expect(comment).toHaveProperty("votes");
+              expect(comment).toHaveProperty("created_at");
+            });
+          });
+      });
+
       test("200 - GET: Responds with an array of 2 comments sorted and ordered", () => {
         return request(app)
           .get("/api/articles/5/comments")
@@ -119,14 +136,6 @@ describe("App endpoints", () => {
             expect(comments).toBeSorted({
               key: "created_at",
               descending: true,
-            });
-            comments.forEach((comment) => {
-              expect(comment).toHaveProperty("comment_id");
-              expect(comment).toHaveProperty("body");
-              expect(comment).toHaveProperty("article_id");
-              expect(comment).toHaveProperty("author");
-              expect(comment).toHaveProperty("votes");
-              expect(comment).toHaveProperty("created_at");
             });
           });
       });
