@@ -324,4 +324,24 @@ describe("App endpoints", () => {
       });
     });
   });
+
+  describe("USERS endpoints", () => {
+    describe("getUsers", () => {
+      test("GET 200: Responds with an array of 4 users", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body: { users } }) => {
+            expect(users).toHaveLength(4);
+            users.forEach((user) => {
+              expect(user).toMatchObject({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              });
+            });
+          });
+      });
+    });
+  });
 });

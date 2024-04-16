@@ -15,6 +15,8 @@ const {
 
 const { removeComment } = require("../controllers/comments.controllers");
 
+const { getUsers } = require("../controllers/users.controllers");
+
 router.get("/", getEndpoints);
 
 // TOPICS
@@ -33,5 +35,8 @@ router.patch("/articles/:article_id", patchArticle);
 
 // COMMENTS
 router.delete("/comments/:comment_id", removeComment);
+
+// USERS
+router.get("/users", getUsers);
 
 module.exports = router;
