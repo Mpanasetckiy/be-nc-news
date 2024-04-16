@@ -45,9 +45,6 @@ const fetchCommentsByArticleId = async (id) => {
   ORDER BY created_at DESC;`,
     [id]
   );
-  if (!rows.length) {
-    return Promise.reject({ status: 200, message: "No comments found" });
-  }
   return rows;
 };
 

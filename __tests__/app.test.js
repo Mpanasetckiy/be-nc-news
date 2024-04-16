@@ -117,6 +117,7 @@ describe("App endpoints", () => {
           .then(({ body: { comments } }) => {
             expect(comments).toHaveLength(2);
             comments.forEach((comment) => {
+              expect(comment.article_id).toBe(5);
               expect(comment).toHaveProperty("comment_id");
               expect(comment).toHaveProperty("body");
               expect(comment).toHaveProperty("article_id");
@@ -162,8 +163,8 @@ describe("App endpoints", () => {
         return request(app)
           .get("/api/articles/2/comments")
           .expect(200)
-          .then(({ body: { message } }) => {
-            expect(message).toBe("No comments found");
+          .then(({ body: { comments } }) => {
+            expect(comments).toEqual([]);
           });
       });
     });
