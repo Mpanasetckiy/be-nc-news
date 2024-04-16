@@ -13,6 +13,8 @@ const {
   patchArticle,
 } = require("../controllers/articles.controllers");
 
+const { removeComment } = require("../controllers/comments.controllers");
+
 router.get("/", getEndpoints);
 
 // TOPICS
@@ -28,5 +30,8 @@ router.get("/articles/:article_id/comments", getCommentsByArticleId);
 router.post("/articles/:article_id/comments", addComment);
 
 router.patch("/articles/:article_id", patchArticle);
+
+// COMMENTS
+router.delete("/comments/:comment_id", removeComment);
 
 module.exports = router;
