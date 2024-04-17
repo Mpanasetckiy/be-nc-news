@@ -118,6 +118,75 @@ describe("App endpoints", () => {
           });
       });
 
+      test("200 - GET: Responds with an array of sorted articles sorted by 'author' and ordered by default", () => {
+        return request(app)
+          .get("/api/articles?sort_by=author")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSorted({
+              key: "author",
+              descending: true,
+            });
+          });
+      });
+
+      test("200 - GET: Responds with an array of sorted articles sorted by 'title' and ordered by ASC", () => {
+        return request(app)
+          .get("/api/articles?sort_by=title&order=asc")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSorted({
+              key: "title",
+              ascending: true,
+            });
+          });
+      });
+
+      test("200 - GET: Responds with an array of sorted articles sorted by 'topic' and ordered by DESC", () => {
+        return request(app)
+          .get("/api/articles?sort_by=title&order=desc")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSorted({
+              key: "title",
+              descending: true,
+            });
+          });
+      });
+
+      test("200 - GET: Responds with an array of sorted articles sorted by 'votes' and ordered by default", () => {
+        return request(app)
+          .get("/api/articles?sort_by=votes")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSorted({
+              key: "votes",
+              descending: true,
+            });
+          });
+      });
+
+      test("200 - GET: Responds with an array of sorted articles sorted by 'comment_count' and ordered by default", () => {
+        return request(app)
+          .get("/api/articles?sort_by=comment_count")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSorted({
+              key: "comment_count",
+              descending: true,
+            });
+          });
+      });
+
+      test("400 - GET: Responds with appropriate error code and body message when invalid order query passed", () => {
+        return request(app)
+          .get("/api/articles?sort_by=topic&order=blah")
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad query value!");
+          });
+      });
+
       test("400 - GET: Responds with appropriate error code and body message", () => {
         return request(app)
           .get("/api/articles?sort_by=blahblah")
