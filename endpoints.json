@@ -117,5 +117,16 @@
         }
       ]
     }
+  },
+  "GET /api/users/:username": {
+    "description": "serves with a correct user",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "rogershop",
+        "name": "paul",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+      }
+    }
   }
 }

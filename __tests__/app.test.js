@@ -488,5 +488,30 @@ describe("App endpoints", () => {
           });
       });
     });
+
+    describe("getUserByUserName", () => {
+      test("GET - 200: Responds with a user by provided username", () => {
+        return request(app)
+          .get("/api/users/lurker")
+          .expect(200)
+          .then(({ body: { user } }) => {
+            expect(user).toMatchObject({
+              username: "lurker",
+              name: "do_nothing",
+              avatar_url:
+                "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            });
+          });
+      });
+
+      test("GET - 404: Responds with an appropriate error when nonexistent username passed", () => {
+        return request(app)
+          .get("/api/users/malina")
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+    });
   });
 });
