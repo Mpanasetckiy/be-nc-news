@@ -2,8 +2,12 @@ const db = require("../db/connection");
 
 const fetchArticleById = async (id) => {
   const { rows } = await db.query(
-    `SELECT * FROM articles
-  WHERE article_id = $1`,
+    `SELECT articles.author, title, articles.body, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments) :: INTEGER  AS comment_count
+    FROM articles
+    LEFT JOIN comments ON 
+    articles.article_id = comments.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;`,
     [id]
   );
   if (!rows.length) {

@@ -42,7 +42,7 @@ describe("App endpoints", () => {
   });
   describe("ARTICLES endpoints", () => {
     describe("getArticleById", () => {
-      test("200 - GET: Responds with a article with according id", () => {
+      test("200 - GET: Responds with an article with corresponding id", () => {
         return request(app)
           .get("/api/articles/1")
           .expect(200)
@@ -52,6 +52,25 @@ describe("App endpoints", () => {
               topic: "mitch",
               author: "butter_bridge",
               body: "I find this existence challenging",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            });
+          });
+      });
+
+      test("200 - GET: Responds with an article with added comment_count prop", () => {
+        return request(app)
+          .get("/api/articles/1")
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article).toMatchObject({
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              comment_count: 11,
               created_at: "2020-07-09T20:11:00.000Z",
               votes: 100,
               article_img_url:
