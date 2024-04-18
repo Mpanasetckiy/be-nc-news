@@ -68,15 +68,22 @@ const fetchArticles = async (queries) => {
   return rows;
 };
 
-const fetchCommentsByArticleId = async (id) => {
+const fetchCommentsByArticleId = async (id, queries) => {
+  const { limit = 10, p = 1 } = queries;
   await checkArticleExists(id);
 
-  const { rows } = await db.query(
-    `SELECT * FROM comments
+  let sqlStr = `SELECT * FROM comments
   WHERE article_id = $1
-  ORDER BY created_at DESC;`,
-    [id]
-  );
+  ORDER BY created_at DESC`;
+
+  if (!isNaN(limit) && !isNaN(p)) {
+    const offset = +limit * +p - 10;
+    sqlStr += ` LIMIT ${limit} OFFSET ${offset}`;
+  } else {
+    return Promise.reject({ status: 400, message: "Bad query value!" });
+  }
+
+  const { rows } = await db.query(sqlStr, [id]);
   return rows;
 };
 

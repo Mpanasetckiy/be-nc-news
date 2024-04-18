@@ -58,7 +58,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "servers with the array of comments with provided article id",
-    "queries": [],
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "comments": [
         {
