@@ -274,6 +274,39 @@ describe("App endpoints", () => {
         });
       });
 
+      test("200 - GET: Responds with an array of 10 comments on the 1 page", async () => {
+        const {
+          body: { comments },
+        } = await request(app).get("/api/articles/1/comments?p=1").expect(200);
+        expect(comments).toHaveLength(10);
+      });
+
+      test("200 - GET: Responds with an array of 1 comment on the 2 page", async () => {
+        const {
+          body: { comments },
+        } = await request(app).get("/api/articles/1/comments?p=2").expect(200);
+        console.log(comments.length);
+        expect(comments).toHaveLength(1);
+      });
+
+      test("400 - GET: Responds with an appropriate error when invalid page passed", async () => {
+        const {
+          body: { message },
+        } = await request(app)
+          .get("/api/articles/1/comments?p=blahpage")
+          .expect(400);
+        expect(message).toBe("Bad query value!");
+      });
+
+      test("400 - GET: Responds with an appropriate error when invalid limit passed", async () => {
+        const {
+          body: { message },
+        } = await request(app)
+          .get("/api/articles/1/comments?p=1&limit=blahlimit")
+          .expect(400);
+        expect(message).toBe("Bad query value!");
+      });
+
       test("400 - GET: Responds with appropriate error code and body message", async () => {
         const {
           body: { message },

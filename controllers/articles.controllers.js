@@ -32,7 +32,8 @@ const getArticles = async (req, res, next) => {
 const getCommentsByArticleId = async (req, res, next) => {
   try {
     const { article_id } = req.params;
-    const comments = await fetchCommentsByArticleId(article_id);
+    const queries = req.query;
+    const comments = await fetchCommentsByArticleId(article_id, queries);
     res.status(200).send({ comments });
   } catch (error) {
     next(error);
