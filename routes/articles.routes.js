@@ -7,6 +7,7 @@ const {
   getCommentsByArticleId,
   addComment,
   patchArticle,
+  createArticle,
 } = require("../controllers/articles.controllers");
 
 router.get("/articles", getArticles);
@@ -18,5 +19,7 @@ router.get("/articles/:article_id/comments", getCommentsByArticleId);
 router.post("/articles/:article_id/comments", addComment);
 
 router.patch("/articles/:article_id", patchArticle);
+
+router.post("/articles/", createArticle);
 
 module.exports = router;

@@ -442,6 +442,132 @@ describe("App endpoints", () => {
           });
       });
     });
+
+    describe("createArticles", () => {
+      test("201 - POST: Responds with a newly created article", () => {
+        const body = {
+          title: "Protect amur tigers",
+          topic: "cats",
+          author: "lurker",
+          body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        };
+        return request(app)
+          .post("/api/articles")
+          .send(body)
+          .expect(201)
+          .then(({ body: { newArticle } }) => {
+            console.log(newArticle);
+            expect(newArticle).toMatchObject({
+              article_id: 14,
+              title: "Protect amur tigers",
+              topic: "cats",
+              author: "lurker",
+              body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+              comment_count: 0,
+              created_at: expect.any(String),
+              votes: 0,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            });
+          });
+      });
+
+      test("201 - POST: Responds with a newly created article, when no article url provided", () => {
+        const body = {
+          title: "Protect amur tigers",
+          topic: "cats",
+          author: "lurker",
+          body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+        };
+        return request(app)
+          .post("/api/articles")
+          .send(body)
+          .expect(201)
+          .then(({ body: { newArticle } }) => {
+            console.log(newArticle);
+            expect(newArticle).toMatchObject({
+              article_id: 14,
+              title: "Protect amur tigers",
+              topic: "cats",
+              author: "lurker",
+              body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+              comment_count: 0,
+              created_at: expect.any(String),
+              votes: 0,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            });
+          });
+      });
+
+      test("400 - POST: Responds with appropriate error when no title on body provided", () => {
+        const body = {
+          topic: "cats",
+          author: "lurker",
+          body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        };
+        return request(app)
+          .post("/api/articles")
+          .send(body)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("400 - POST: Responds with appropriate error when no article's body provided", () => {
+        const body = {
+          title: "Protect amur tigers",
+          topic: "cats",
+          author: "lurker",
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        };
+        return request(app)
+          .post("/api/articles")
+          .send(body)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("404 - POST: Responds with appropriate error when nonexistent author passed", () => {
+        const body = {
+          title: "Protect amur tigers",
+          topic: "cats",
+          author: "malina",
+          body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+        };
+        return request(app)
+          .post("/api/articles")
+          .send(body)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No key found");
+          });
+      });
+
+      test("404 - POST: Responds with appropriate error when nonexistent topic passed", () => {
+        const body = {
+          title: "Protect amur tigers",
+          topic: "tigers",
+          author: "lurker",
+          body: "Siberian tigers are the most rare subspecies of tiger and the largest tiger subspecies in the world. It is important to save the Siberian tiger because they are beautiful and strong creatures.",
+        };
+        return request(app)
+          .post("/api/articles")
+          .send(body)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No key found");
+          });
+      });
+    });
   });
 
   describe("COMMENTS endpoints", () => {
