@@ -95,12 +95,12 @@ describe("App endpoints", () => {
     });
 
     describe("getArticles", () => {
-      test("200 - GET: Responds with an array of 13 articles sorted and ordered", () => {
+      test("200 - GET: Responds with an array of articles sorted and ordered", () => {
         return request(app)
           .get("/api/articles")
           .expect(200)
           .then(({ body: { articles } }) => {
-            expect(articles).toHaveLength(13);
+            expect(articles).toHaveLength(10);
             expect(articles).toBeSorted({
               key: "created_at",
               descending: true,
@@ -196,24 +196,24 @@ describe("App endpoints", () => {
           });
       });
 
-      test("200 - GET: Responds with an array of 12 articles filtered by topic", () => {
+      test("200 - GET: Responds with an array of articles filtered by topic", () => {
         return request(app)
           .get("/api/articles?topic=mitch")
           .expect(200)
           .then(({ body: { articles } }) => {
-            expect(articles).toHaveLength(12);
+            expect(articles).toHaveLength(10);
             articles.forEach(({ topic }) => {
               expect(topic).toBe("mitch");
             });
           });
       });
 
-      test("200 - GET: Responds with an array of all 13 articles when topic query omitted", () => {
+      test("200 - GET: Responds with an array of articles when topic query omitted", () => {
         return request(app)
           .get("/api/articles?topic=")
           .expect(200)
           .then(({ body: { articles } }) => {
-            expect(articles).toHaveLength(13);
+            expect(articles).toHaveLength(10);
           });
       });
 
@@ -223,6 +223,51 @@ describe("App endpoints", () => {
           .expect(200)
           .then(({ body: { articles } }) => {
             expect(articles).toHaveLength(0);
+          });
+      });
+
+      test("200 - GET: Responds with an array of 10 articles by default", () => {
+        return request(app)
+          .get("/api/articles")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toHaveLength(10);
+          });
+      });
+
+      test("200 - GET: Responds with an array of 3 articles on the 2 page", () => {
+        return request(app)
+          .get("/api/articles?p=2")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toHaveLength(3);
+          });
+      });
+
+      test("200 - GET: Responds with an empty array when out of the limit", () => {
+        return request(app)
+          .get("/api/articles?p=5")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toHaveLength(0);
+          });
+      });
+
+      test("400 - GET: Responds with an appropriate error when invalid page passed", () => {
+        return request(app)
+          .get("/api/articles?p=blahpage")
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad query value!");
+          });
+      });
+
+      test("400 - GET: Responds with an appropriate error when invalid limit passed", () => {
+        return request(app)
+          .get("/api/articles?p=1&limit=blahlimit")
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad query value!");
           });
       });
     });
