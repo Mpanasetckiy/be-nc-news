@@ -17,7 +17,13 @@ const fetchArticleById = async (id) => {
 };
 
 const fetchArticles = async (queries) => {
-  const { sort_by = "created_at", order = "desc", topic } = queries;
+  const {
+    sort_by = "created_at",
+    order = "desc",
+    topic,
+    limit = 10,
+    p = 1,
+  } = queries;
 
   const acceptedQueries = ["asc", "desc"];
   const acceptedSortQueries = [
@@ -50,8 +56,14 @@ const fetchArticles = async (queries) => {
   }
 
   sqlStr += ` GROUP BY articles.article_id
-   ORDER BY ${sort_by} ${order};`;
+   ORDER BY ${sort_by} ${order}`;
 
+  if (!isNaN(limit) && !isNaN(p)) {
+    const offset = +limit * +p - 10;
+    sqlStr += ` LIMIT ${limit} OFFSET ${offset}`;
+  } else {
+    return Promise.reject({ status: 400, message: "Bad query value!" });
+  }
   const { rows } = await db.query(sqlStr, queryValues);
   return rows;
 };
