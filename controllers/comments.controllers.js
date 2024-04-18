@@ -1,4 +1,4 @@
-const { deleteComment } = require("../models/comments.models");
+const { deleteComment, patchComment } = require("../models/comments.models");
 
 const removeComment = async (req, res, next) => {
   try {
@@ -10,4 +10,15 @@ const removeComment = async (req, res, next) => {
   }
 };
 
-module.exports = { removeComment };
+const updateComment = async (req, res, next) => {
+  try {
+    const { comment_id } = req.params;
+    const body = req.body;
+    const updatedComment = await patchComment(comment_id, body);
+    res.status(200).send({ updatedComment });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { removeComment, updateComment };
