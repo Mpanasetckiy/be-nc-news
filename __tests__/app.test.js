@@ -468,6 +468,65 @@ describe("App endpoints", () => {
           });
       });
     });
+
+    describe("patchComment", () => {
+      test("200 - PATCH: Responds with an updated comment", () => {
+        const body = { inc_votes: -1 };
+        return request(app)
+          .patch("/api/comments/1")
+          .send(body)
+          .expect(200)
+          .then(({ body: { updatedComment } }) => {
+            expect(updatedComment).toMatchObject({
+              comment_id: 1,
+              body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+              votes: 15,
+              author: "butter_bridge",
+              article_id: 9,
+              created_at: expect.any(String),
+            });
+          });
+      });
+
+      test("400 - PATCH: Responds with an appropriate error when invalid comment_id provided", () => {
+        const body = {
+          inc_vote: 5,
+        };
+        return request(app)
+          .patch("/api/comments/blahblah")
+          .send(body)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("400 - PATCH: Responds with an appropriate error when invalid inc_vote provided", () => {
+        const body = {
+          inc_vote: "sdfsdf",
+        };
+        return request(app)
+          .patch("/api/comments/3")
+          .send(body)
+          .expect(400)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Bad request");
+          });
+      });
+
+      test("404 - PATCH: Responds with an appropriate error when nonexistent comment_id provided", () => {
+        const body = {
+          inc_vote: 5,
+        };
+        return request(app)
+          .patch("/api/comments/555")
+          .send(body)
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("No data found");
+          });
+      });
+    });
   });
 
   describe("USERS endpoints", () => {
