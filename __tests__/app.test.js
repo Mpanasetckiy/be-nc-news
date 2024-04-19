@@ -622,6 +622,26 @@ describe("App endpoints", () => {
         expect(message).toBe("No key found");
       });
     });
+
+    describe("deleteArticle", () => {
+      test("204 - DELETE: Responds with an appropriate code when article deleted", () => {
+        return request(app).delete("/api/articles/1").expect(204);
+      });
+
+      test("404 - DELETE: Responds with an appropriate error code when article nonexistent", async () => {
+        const {
+          body: { message },
+        } = await request(app).delete("/api/articles/6768").expect(404);
+        expect(message).toBe("No data found");
+      });
+
+      test("400 - DELETE: Responds with an appropriate error code when invalid article id provided", async () => {
+        const {
+          body: { message },
+        } = await request(app).delete("/api/articles/blaharticle").expect(400);
+        expect(message).toBe("Bad request");
+      });
+    });
   });
 
   describe("COMMENTS endpoints", () => {
