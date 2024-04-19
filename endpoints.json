@@ -11,6 +11,15 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "serves with a newly posted topic",
+    "queries": [],
+    "exampleResponse": {
+      "topics": [
+        { "slug": "tigers", "description": "tiger's life in the forest" }
+      ]
+    }
+  },
   "GET /api/articles": {
     "description": "serves an array of all articles",
     "queries": {

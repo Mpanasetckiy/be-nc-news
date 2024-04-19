@@ -35,6 +35,43 @@ describe("App endpoints", () => {
         expect(topic).toHaveProperty("description");
       });
     });
+
+    test("201 - POST: Responds with a newly created topic", async () => {
+      const newTopic = {
+        slug: "tigers",
+        description: "tiger's life in the forest",
+      };
+      const {
+        body: { topic },
+      } = await request(app).post("/api/topics").send(newTopic).expect(201);
+      expect(topic).toMatchObject({
+        slug: "tigers",
+        description: "tiger's life in the forest",
+      });
+    });
+
+    test("201 - POST: Responds with a newly created topic when no description passed", async () => {
+      const newTopic = {
+        slug: "tigers",
+      };
+      const {
+        body: { topic },
+      } = await request(app).post("/api/topics").send(newTopic).expect(201);
+      expect(topic).toMatchObject({
+        slug: "tigers",
+        description: expect.any(String),
+      });
+    });
+
+    test("400 - POST: Responds with an appropriate error message whe missing slug key", async () => {
+      const newTopic = {
+        description: "tiger's life in the forest",
+      };
+      const {
+        body: { message },
+      } = await request(app).post("/api/topics").send(newTopic).expect(400);
+      expect(message).toBe("Bad request");
+    });
   });
   describe("ARTICLES endpoints", () => {
     describe("getArticleById", () => {
@@ -285,7 +322,6 @@ describe("App endpoints", () => {
         const {
           body: { comments },
         } = await request(app).get("/api/articles/1/comments?p=2").expect(200);
-        console.log(comments.length);
         expect(comments).toHaveLength(1);
       });
 

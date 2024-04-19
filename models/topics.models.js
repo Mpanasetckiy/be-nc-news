@@ -10,4 +10,16 @@ const fetchTopics = async () => {
   return rows;
 };
 
-module.exports = { fetchTopics };
+const insertTopic = async (topic) => {
+  const { slug, description = "" } = topic;
+  const { rows } = await db.query(
+    `INSERT INTO topics
+  (slug, description)
+  VALUES ($1, $2)
+  RETURNING *`,
+    [slug, description]
+  );
+  return rows[0];
+};
+
+module.exports = { fetchTopics, insertTopic };
