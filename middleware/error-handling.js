@@ -3,6 +3,7 @@ exports.pgErrorHandling = (err, req, res, next) => {
     console.log(err.code, err.message);
     res.status(400).send({ message: "Bad request" });
   } else if (err.code === "23503") {
+    console.log(err.code, err.message);
     res.status(404).send({ message: "No key found" });
   } else {
     next(err);

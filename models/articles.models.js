@@ -152,6 +152,17 @@ const insertArticle = async (article) => {
   return newArticle;
 };
 
+const deleteArticle = async (id) => {
+  const { rowCount } = await db.query(
+    `DELETE FROM articles WHERE article_id = $1`,
+    [id]
+  );
+  if (!rowCount) {
+    return Promise.reject({ status: 404, message: "No data found" });
+  }
+  return rowCount;
+};
+
 module.exports = {
   fetchArticleById,
   fetchArticles,
@@ -159,4 +170,5 @@ module.exports = {
   createComment,
   updateArticle,
   insertArticle,
+  deleteArticle,
 };

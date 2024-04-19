@@ -8,6 +8,7 @@ const {
   addComment,
   patchArticle,
   createArticle,
+  removeArticle,
 } = require("../controllers/articles.controllers");
 
 router.get("/articles", getArticles);
@@ -21,5 +22,7 @@ router.post("/articles/:article_id/comments", addComment);
 router.patch("/articles/:article_id", patchArticle);
 
 router.post("/articles/", createArticle);
+
+router.delete("/articles/:article_id", removeArticle);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const {
   createComment,
   updateArticle,
   insertArticle,
+  deleteArticle,
 } = require("../models/articles.models");
 
 const getArticleById = async (req, res, next) => {
@@ -72,6 +73,16 @@ const createArticle = async (req, res, next) => {
   }
 };
 
+const removeArticle = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    await deleteArticle(article_id);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getArticleById,
   getArticles,
@@ -80,4 +91,5 @@ module.exports = {
   addComment,
   patchArticle,
   createArticle,
+  removeArticle,
 };
