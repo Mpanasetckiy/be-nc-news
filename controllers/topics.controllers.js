@@ -1,4 +1,4 @@
-const { fetchTopics } = require("../models/topics.models");
+const { fetchTopics, insertTopic } = require("../models/topics.models");
 
 const getTopics = async (req, res, next) => {
   try {
@@ -9,4 +9,14 @@ const getTopics = async (req, res, next) => {
   }
 };
 
-module.exports = { getTopics };
+const postTopic = async (req, res, next) => {
+  try {
+    const newTopic = req.body;
+    const topic = await insertTopic(newTopic);
+    res.status(201).send({ topic });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getTopics, postTopic };
