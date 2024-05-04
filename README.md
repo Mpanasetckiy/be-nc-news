@@ -70,7 +70,7 @@ Ensure that your system meets the following requirements to use the API:
 
 This URL is for accessing the NEWS API:
 
-https://be-nc-news-0820.onrender.com
+https://be-nc-news-0820.onrender.com/api
 
 ### Endpoints
 
@@ -78,21 +78,51 @@ For detailed information on available endpoints and their outcome, refer to the 
 
 ### Available Endpoints
 
-`GET /api/topics`
-
-- responds with a list of topics
+#### General
 
 `GET /api`
 
 - responds with a list of available endpoints
 
-`GET /api/articles/:article_id`
+`GET /api/topics`
 
-- responds with a single article by article_id
+- responds with a list of topics
+
+`POST /api/topics`
+
+- serves with a newly created topic
+
+#### Articles
 
 `GET /api/articles`
 
 - responds with a list of articles
+
+`GET /api/articles (queries)`
+
+- allows articles to be filtered and sorted
+
+`GET /api/articles/:article_id`
+
+- responds with a single article by article_id
+
+`GET /api/articles/:article_id (comment count)`
+
+- adds a comment count to the response when retrieving a single article
+
+`POST /api/articles`
+
+- creates an article and serves with a newly created article
+
+`PATCH /api/articles/:article_id`
+
+- updates an article by article_id
+
+`DELETE /api/articles/:article_id`
+
+- deletes an article by article_id
+
+#### Comments
 
 `GET /api/articles/:article_id/comments`
 
@@ -102,22 +132,20 @@ For detailed information on available endpoints and their outcome, refer to the 
 
 - add a comment by article_id
 
-`PATCH /api/articles/:article_id`
+`PATCH /api/comments/:comment_id`
 
-- updates an article by article_id
+- updates a comment by comment_id
 
 `DELETE /api/comments/:comment_id`
 
 - deletes a comment by comment_id
 
+#### Users
+
 `GET /api/users`
 
 - responds with a list of users
 
-`GET /api/articles (queries)`
+`GET /api/users/:username`
 
-- allows articles to be filtered and sorted
-
-`GET /api/articles/:article_id (comment count)`
-
-- adds a comment count to the response when retrieving a single article
+- responds with a user by username
