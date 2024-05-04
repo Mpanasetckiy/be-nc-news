@@ -135,6 +135,7 @@ describe("App endpoints", () => {
         });
         articles.forEach((article) => {
           expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("body");
           expect(article).toHaveProperty("title");
           expect(article).toHaveProperty("article_id");
           expect(article).toHaveProperty("topic");

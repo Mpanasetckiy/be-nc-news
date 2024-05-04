@@ -44,18 +44,19 @@ const fetchArticles = async (queries) => {
 
   const queryValues = [];
 
-  let sqlStr = `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments) :: INT AS comment_count
+  let sqlStr = `SELECT articles.article_id, articles.author, users.avatar_url, title, articles.body, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments) :: INT AS comment_count
   FROM articles
   LEFT JOIN comments ON 
   articles.article_id = comments.article_id
-  `;
+  JOIN users ON
+  articles.author = users.username`;
 
   if (topic) {
     sqlStr += " WHERE topic = $1";
     queryValues.push(topic);
   }
 
-  sqlStr += ` GROUP BY articles.article_id
+  sqlStr += ` GROUP BY articles.article_id, users.username
    ORDER BY ${sort_by} ${order}`;
 
   if (!isNaN(limit) && !isNaN(p)) {
