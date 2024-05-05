@@ -46,7 +46,7 @@ const fetchArticles = async (queries) => {
 
   const queryValues = [];
 
-  let sqlStr = `SELECT articles.article_id, articles.author, users.avatar_url, title, articles.body, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments) :: INT AS comment_count
+  let sqlStr = `SELECT articles.article_id, articles.author, users.avatar_url AS author_avatar_url, title, articles.body, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments) :: INT AS comment_count
   FROM articles
   LEFT JOIN comments ON 
   articles.article_id = comments.article_id
@@ -75,7 +75,8 @@ const fetchCommentsByArticleId = async (id, queries) => {
   const { limit = 10, p = 1 } = queries;
   await checkArticleExists(id);
 
-  let sqlStr = `SELECT * FROM comments
+  let sqlStr = `SELECT comment_id, comments.body, comments.article_id, comments.author, users.avatar_url AS author_avatar_url, votes, created_at FROM comments
+  JOIN users ON comments.author = users.username
   WHERE article_id = $1
   ORDER BY created_at DESC`;
 
@@ -87,6 +88,7 @@ const fetchCommentsByArticleId = async (id, queries) => {
   }
 
   const { rows } = await db.query(sqlStr, [id]);
+
   return rows;
 };
 
