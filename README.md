@@ -70,7 +70,7 @@ Ensure that your system meets the following requirements to use the API:
 
 This URL is for accessing the NEWS API:
 
-https://be-nc-news-0820.onrender.com/api
+https://be-nc-news-nk62cwr2zq-uc.a.run.app/api
 
 ### Endpoints
 
